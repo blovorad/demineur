@@ -1,0 +1,7 @@
+titre=test_window
+window_width=800
+window_height=600
+window_pos_x=20
+window_pos_y=50
+window_flag=0
+renderer_flag=0
