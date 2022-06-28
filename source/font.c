@@ -135,13 +135,12 @@ void remove_one_current_use_text(Tab_text *tab_text, const char *text){
 	while(found == SDL_FALSE && index < tab_text->nb_text){
 
 		if(tab_text->text[index].current_use > 0){
-			
+
 			if(strcmp(text, tab_text->text[index].text) == 0){
 
 				tab_text->text[index].current_use -= 1;
 				if(tab_text->text[index].current_use == 0){
 
-					printf("on clean un text : %s\n", text);
 					clean_text(tab_text, index);
 				}
 			}
@@ -170,7 +169,19 @@ void clean_tab_text(Tab_text *tab_text){
 
 		for(int i = 0; i < tab_text->nb_text; i++){
 
-			clean_text(tab_text, i);
+			if(tab_text->text[i].current_use > 0){
+
+				if(tab_text->text[i].texture != NULL){
+
+					SDL_DestroyTexture(tab_text->text[i].texture);
+					tab_text->text[i].texture = NULL;
+				}
+				if(tab_text->text[i].text != NULL){
+
+					free(tab_text->text[i].text);
+					tab_text->text[i].text = NULL;
+				}
+			}
 		}
 
 		free(tab_text->text);

@@ -83,11 +83,11 @@ void creat_configuration_file(const char *path){
 		exit(1);
 	}
 
-	fprintf(file, "%s\n", "titre=test_window");
+	fprintf(file, "%s\n", "titre=Demineur-par-blovorad");
 	fprintf(file, "%s\n", "window_width=800");
 	fprintf(file, "%s\n", "window_height=600");
-	fprintf(file, "%s\n", "window_pos_x=0");
-	fprintf(file, "%s\n", "window_pos_y=0");
+	fprintf(file, "%s\n", "window_pos_x=50");
+	fprintf(file, "%s\n", "window_pos_y=50");
 	fprintf(file, "%s\n", "window_flag=0");
 	fprintf(file, "%s\n", "renderer_flag=0");
 
