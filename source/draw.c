@@ -36,15 +36,25 @@ void fill_rect(SDL_Renderer *renderer, const SDL_Rect rect, SDL_Color color){
 	}
 }
 
-void draw_sprite_ex(SDL_Renderer *renderer, Tab_texture *tab_texture, const Sprite sprite){
+void draw_sprite_ex(SDL_Renderer *renderer, Tab_texture *tab_texture, SDL_Texture *texture, const Sprite sprite){
 
 	assert(renderer != NULL);
-	assert(tab_texture != NULL);
 
-	if(SDL_RenderCopyEx(renderer, get_texture(tab_texture, sprite.index_texture), &sprite.source, &sprite.position, sprite.angle, &sprite.center, sprite.flip) < 0){
+	if(tab_texture == NULL){
 
-		SDL_Log("SDL_RenderCopyEx failed :%s\n", SDL_GetError());
-		exit(1);
+		if(SDL_RenderCopyEx(renderer, texture, &sprite.source, &sprite.position, sprite.angle, &sprite.center, sprite.flip) < 0){
+
+			SDL_Log("SDL_RenderCopyEx failed :%s\n", SDL_GetError());
+			exit(1);
+		}
+	}
+	else{
+
+		if(SDL_RenderCopyEx(renderer, get_texture(tab_texture, sprite.index_texture), &sprite.source, &sprite.position, sprite.angle, &sprite.center, sprite.flip) < 0){
+
+			SDL_Log("SDL_RenderCopyEx failed :%s\n", SDL_GetError());
+			exit(1);
+		}
 	}
 }
 

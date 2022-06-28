@@ -36,7 +36,7 @@ Sprite creat_sprite(SDL_Renderer *renderer, Tab_texture *tab_texture, const char
 void draw_sprite(SDL_Renderer *renderer, Tab_texture *tab_texture, const Sprite sprite);
 
 /*dessin d'un sprite rotatif*/
-void draw_sprite_ex(SDL_Renderer *renderer, Tab_texture *tab_texture, const Sprite sprite);
+void draw_sprite_ex(SDL_Renderer *renderer, Tab_texture *tab_texture, SDL_Texture *texture, const Sprite sprite);
 
 /*application d'une couleur*/
 void set_color(SDL_Renderer *renderer, SDL_Color color);

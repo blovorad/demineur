@@ -13,28 +13,36 @@ int demineur(void){
 	Window window;
 	Input input;
 	Mouse mouse;
+	Tab_text tab_text;
 	Tab_texture tab_texture;
 	Map map;
 	
 	/*initialisation du jeu*/
-	init(&window, &input, &mouse, &tab_texture, &map);
+	init(&window, &input, &mouse, &tab_texture, &map, &tab_text);
 
 	Uint32 last_tick = SDL_GetTicks();
 	Uint32 current_tick;
 	double fps = (double)1000/(double)30;
-	SDL_bool defeat = SDL_FALSE;
+	SDL_bool end_of_game = SDL_FALSE;
+
+	SDL_Color text_color = {255,255,255,255};
+	SDL_Rect text_pos = {200, 575, 400, 25};
+	TTF_Font *font = open_font("./source/files/fonts/demineur_font.ttf", 50);
+
+	creat_text(window.renderer, "Demineur produit par Blovorad", text_pos, text_color, font, &tab_text);
+	close_font(&font);
 
 	/*boucle du jeu*/
 	while(update_input(&input, &mouse) == SDL_TRUE){
 
 		current_tick = SDL_GetTicks();
 
-		if(defeat == SDL_FALSE){
+		if(end_of_game == SDL_FALSE){
 
 			get_mouse_pos(&mouse);
 
 			get_tile_hoover(&map, &mouse);
-
+			SDL_bool victory = SDL_FALSE;
 			if(mouse.tile != NULL){
 
 				if(mouse.tile->is_pressed == SDL_FALSE && ((mouse.left_click == SDL_TRUE && mouse.old_left_click == SDL_FALSE) || (mouse.right_click == SDL_TRUE && mouse.old_right_click == SDL_FALSE))){
@@ -43,8 +51,6 @@ int demineur(void){
 					check_who_pressed(&map, &mouse);
 				}
 				else if(mouse.tile->is_pressed == SDL_TRUE){
-
-					SDL_bool victory = SDL_FALSE;
 
 					if(mouse.left_click == SDL_FALSE && mouse.old_left_click == SDL_TRUE){
 
@@ -61,7 +67,7 @@ int demineur(void){
 								mouse.tile->is_hoover = SDL_FALSE;
 								mouse.tile->is_flag = SDL_FALSE;
 								mouse.tile = NULL;
-								defeat = SDL_TRUE;
+								end_of_game = SDL_TRUE;
 							}
 							else{
 
@@ -95,24 +101,37 @@ int demineur(void){
 							mouse.tile = NULL;
 						}
 					}
-
-					if(victory == 1){
-
-						mouse.tile = NULL;
-						clean_map(&tab_texture, &map);
-						map = init_map(window.renderer, &tab_texture, 20, 15, 20);
-					}
 				}
+			}
+
+			if(victory == SDL_TRUE){
+
+				end_of_game = SDL_TRUE;
+				text_pos.x = 200;
+				text_pos.y = 10;
+				font = open_font("./source/files/fonts/demineur_font.ttf", 50);
+				creat_text(window.renderer, "Victoire, pressez espace pour recommencer", text_pos, text_color, font, &tab_text);
+				close_font(&font);
+			}
+			else if(end_of_game == SDL_TRUE){
+
+				text_pos.x = 200;
+				text_pos.y = 10;
+				font = open_font("./source/files/fonts/demineur_font.ttf", 50);
+				creat_text(window.renderer, "Defaite, pressez espace pour recommencer", text_pos, text_color, font, &tab_text);
+				close_font(&font);
 			}
 		}
 		else{
 
 			if(input.space == SDL_TRUE){
 
+				remove_one_current_use_text(&tab_text, "Victoire, pressez espace pour recommencer");
+				remove_one_current_use_text(&tab_text, "Defaite, pressez espace pour recommencer");
 				mouse.tile = NULL;
 				clean_map(&tab_texture, &map);
 				map = init_map(window.renderer, &tab_texture, 20, 15, 20);
-				defeat = SDL_FALSE;
+				end_of_game = SDL_FALSE;
 			}
 		}
 
@@ -120,7 +139,7 @@ int demineur(void){
 		mouse.old_right_click = mouse.right_click;
 
 		/*dessin*/
-		draw(window.renderer, &tab_texture, map);
+		draw(window.renderer, &tab_texture, map, &tab_text);
 
 		/*gestion des fps*/
 		if(last_tick + fps > current_tick){
@@ -133,7 +152,9 @@ int demineur(void){
 
 	/*quitter le programme*/
 	clean_map(&tab_texture, &map);
+	clean_tab_text(&tab_text);
 	free_window(&window);
+	TTF_Quit();
 	SDL_Quit();
 
 	printf("on arrete\n");
@@ -271,13 +292,14 @@ void check_who_pressed(Map *map, Mouse *mouse){
 	}
 }
 
-void draw(SDL_Renderer *renderer, Tab_texture *tab_texture, Map map){
+void draw(SDL_Renderer *renderer, Tab_texture *tab_texture, Map map, Tab_text *tab_text){
 
 	SDL_Color black = {0,0,0,255};
 	set_color(renderer, black);
 	SDL_RenderClear(renderer);
 
 	draw_map(renderer, tab_texture, map);
+	draw_text(renderer, tab_text);
 
 	SDL_RenderPresent(renderer);
 }

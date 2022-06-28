@@ -12,8 +12,9 @@ Auteur Gautier Levesque
 
 #include "window.h"
 #include "input.h"
+#include "font.h"
 
 /*initialisation du programme*/
-void init(Window *window, Input *input, Mouse *mouse, Tab_texture *tab_texture, Map *map);
+void init(Window *window, Input *input, Mouse *mouse, Tab_texture *tab_texture, Map *map, Tab_text *tab_text);
 
 #endif

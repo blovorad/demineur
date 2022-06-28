@@ -1,9 +1,15 @@
+/*
+Auteur Gautier Levesque
+06/06/2022
+*/
+
 #ifndef __DEMINEUR_H__
 #define __DEMINEUR_H__
 
 /*include standards entrer/sortie et malloc*/
 #include <stdio.h>
 #include <stdlib.h>
+
 #include <time.h>
 #include <math.h>
 
@@ -13,7 +19,7 @@
 void get_tile_hoover(Map *map, Mouse *mouse);
 
 /*fonction qui dessine le jeu/fenetre*/
-void draw(SDL_Renderer *renderer, Tab_texture *tab_texture, Map map);
+void draw(SDL_Renderer *renderer, Tab_texture *tab_texture, Map map, Tab_text *tab_text);
 
 /*verification de la victoire*/
 SDL_bool check_victory(Map map);
